@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\IntelMicroStack">
+      <UniqueIdentifier>{614cc33c-8324-4bd1-8c98-a84ff7243230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IntelMicroStack">
+      <UniqueIdentifier>{0b8bafad-64d4-4ce5-9304-1b8e252c0f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IntelMMR">
+      <UniqueIdentifier>{fa37bd17-27f8-496c-90d6-1041537bc828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IntelMMR">
+      <UniqueIdentifier>{85dd98dd-0269-4282-aef6-df3a6bcbe2b5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MediaPlayerControl\MediaPlayerControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMicroStack\ILibAsyncServerSocket.h">
+      <Filter>Header Files\IntelMicroStack</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMicroStack\ILibAsyncSocket.h">
+      <Filter>Header Files\IntelMicroStack</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMicroStack\ILibAsyncUDPSocket.h">
+      <Filter>Header Files\IntelMicroStack</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMicroStack\ILibParsers.h">
+      <Filter>Header Files\IntelMicroStack</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMicroStack\ILibWebClient.h">
+      <Filter>Header Files\IntelMicroStack</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMicroStack\ILibWebServer.h">
+      <Filter>Header Files\IntelMicroStack</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMicroStack\UPnPMicroStack.h">
+      <Filter>Header Files\IntelMicroStack</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMicroStack\stdafx.h">
+      <Filter>Header Files\IntelMicroStack</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelMMR\MicroMediaRenderer.h">
+      <Filter>Header Files\IntelMMR</Filter>
+    </ClInclude>
+    <ClInclude Include="functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="upnpRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="menus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MediaPlayerControl\MediaPlayerControl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMicroStack\ILibAsyncServerSocket.c">
+      <Filter>Source Files\IntelMicroStack</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMicroStack\ILibAsyncSocket.c">
+      <Filter>Source Files\IntelMicroStack</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMicroStack\ILibAsyncUDPSocket.c">
+      <Filter>Source Files\IntelMicroStack</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMicroStack\ILibParsers.c">
+      <Filter>Source Files\IntelMicroStack</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMicroStack\ILibWebClient.c">
+      <Filter>Source Files\IntelMicroStack</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMicroStack\ILibWebServer.c">
+      <Filter>Source Files\IntelMicroStack</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMicroStack\stdafx.cpp">
+      <Filter>Source Files\IntelMicroStack</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMicroStack\UPnPMicroStack.c">
+      <Filter>Source Files\IntelMicroStack</Filter>
+    </ClCompile>
+    <ClCompile Include="IntelMMR\MicroMediaRenderer.c">
+      <Filter>Source Files\IntelMMR</Filter>
+    </ClCompile>
+    <ClCompile Include="upnpRenderer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="functions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="menus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="upnpRenderer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

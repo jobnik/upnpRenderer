@@ -1,0 +1,154 @@
+// Microsoft Visual C++ generated resource script.
+//
+//#include "resource.h"
+#include "upnpRenderer.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Hebrew resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_HEB)
+#ifdef _WIN32
+LANGUAGE LANG_HEBREW, SUBLANG_DEFAULT
+#pragma code_page(1255)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ID_DIALOG_MAIN DIALOGEX 0, 0, 544, 300
+STYLE DS_SETFONT | DS_3DLOOK | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_OVERLAPPEDWINDOW | WS_EX_APPWINDOW
+CAPTION upnpVersionString
+FONT 10, "Courier New", 0, 0, 0x0
+BEGIN
+    EDITTEXT    ID_PRINT_TEXT,0,0,543,300,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | NOT WS_BORDER | WS_VSCROLL
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    ID_DIALOG_MAIN, DIALOG
+    BEGIN
+        RIGHTMARGIN, 543
+        BOTTOMMARGIN, 298
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Hebrew resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
+STRINGTABLE
+BEGIN
+   IDR_TRAYMENU_TT upnpVersionString
+END
+
+IDR_TRAYMENU MENU
+BEGIN
+  POPUP "TrayMenu"
+    BEGIN
+        POPUP upnpVersionString
+            BEGIN
+		        MENUITEM "Stop",    IDM_START_STOP
+		    END
+		MENUITEM "About",           IDM_ABOUT
+        MENUITEM SEPARATOR
+		MENUITEM "Close",           IDM_CLOSE
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// Icon
+
+IDI_ICON                ICON    DISCARDABLE     "Media/icon32.ico"
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+1 VERSIONINFO
+ FILEVERSION 0,1,0,0
+ PRODUCTVERSION 0,1,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040d04b0"
+        BEGIN
+            VALUE "CompanyName", "(: JOBnik! :) Arthur Aminov, Israel\0"
+            VALUE "FileDescription", "upnpRenderer\0"
+            VALUE "FileVersion", "0.1\0"
+            VALUE "LegalCopyright", "Copyright © 2021\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x40d, 1200
+    END
+END
+
+#endif    // !_MAC
