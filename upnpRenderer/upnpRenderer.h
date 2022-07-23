@@ -13,7 +13,7 @@
 #include <tchar.h>
 
 #define upnpVersionString "upnpRenderer v0.1 by jobnik.net"
-#define upnpAbout "upnpRenderer v0.1\r\n(c) 2021 (: JOBnik! :) Arthur Aminov, Israel\r\nBased on Intel's UPnP Media Renderer"
+#define upnpAbout "upnpRenderer v0.1\r\n\r\n(c) 2021 (: JOBnik! :) Arthur Aminov, Israel\r\nhttps://www.jobnik.net\r\n\r\nBased on Intel's UPnP Media Renderer"
 
 #define BUFFER_SIZE     1024
 #define WBUFFER_SIZE    BUFFER_SIZE * 10
