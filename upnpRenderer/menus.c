@@ -14,6 +14,7 @@
 
 extern void upnpStart();
 extern void upnpStop();
+extern BOOL isUpnpStarted;
 
 void GetMediaPlayersList(char *curMediaPlayer, char *mediaPlayers, HMENU hMenuControl)
 {
@@ -231,7 +232,7 @@ LRESULT wmCommandMenu(HWND h, UINT m, WPARAM w, LPARAM l, char *friendlyName, HM
 
                     WritePrivateProfileString(TEXT("upnpRenderer"), TEXT("lastMediaPlayer"), menuString, cCurrentPath);
 
-            		wprintft(TEXT("Controlling Media Player: %s\r\n"), menuString);
+            		if (isUpnpStarted) wprintft(TEXT("Controlling Media Player: %s\r\n"), menuString);
             	} else {
     			    return DefWindowProc(h, m, w, l);
             	}

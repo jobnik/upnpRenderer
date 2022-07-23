@@ -69,8 +69,11 @@ HANDLE threadUpnp = NULL;
 int WebServerPort = 3500;
 char friendlyName[100] = {0};
 TCHAR lastMediaPlayer[100] = {0};
+BOOL isUpnpStarted = FALSE;
 
 extern struct MP *mp;
+
+typedef void (CALLBACK UPNPSTARTEDPROC)();
 
 // Handle volume change
 void MROnVolumeChangeRequestSink(enum MR_Enum_AudioChannels Channel, unsigned short Value)
@@ -401,7 +404,7 @@ DWORD WINAPI ILib_IPAddressMonitorLoop(LPVOID args)
 	return 0;
 }
 
-void upnpCreate()
+void upnpCreate(UPNPSTARTEDPROC *proc)
 {
 	char *udn;
 	char hostname[100];
@@ -426,7 +429,7 @@ void upnpCreate()
     	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
     	RtlGetVersion(&osvi);
     
-    	sprintf(friendlyName, "%s (Windows %d)", hostname, osvi.dwMajorVersion);
+    	sprintf(friendlyName, "%s (Windows %d)", hostname, osvi.dwBuildNumber >= 22000 ? 11 : osvi.dwMajorVersion);	// fix for Windows 11
     }
 
 	printft("------------------------------------------------------\r\n");
@@ -495,6 +498,10 @@ void upnpCreate()
 	ILib_IPAddressMonitorTerminator = CreateEvent(NULL, TRUE, FALSE, NULL);
 	ILib_IPAddressMonitorThread = CreateThread(NULL, 0, &ILib_IPAddressMonitorLoop, NULL, 0, &ptid2);
 
+	if (proc) {
+		proc();	// upnpStartedCallback
+	}
+
 	// Start the renderer thread chain
     ILibStartChain(MicroStackChain);
 
@@ -504,16 +511,22 @@ void upnpCreate()
 	WSACleanup();
 }
 
+void upnpStartedCallback()
+{
+	wprintft(TEXT("Controlling Media Player: %s\r\n"), lastMediaPlayer);
+	isUpnpStarted = TRUE;
+}
+
 DWORD WINAPI threadUpnpCreate(LPVOID args)
 {
-    upnpCreate();
+    upnpCreate((UPNPSTARTEDPROC*)args);
 	return 0;
 }
 
 void upnpStart()
 {
     iniLoadConf();
-    threadUpnp = CreateThread(NULL, 0, &threadUpnpCreate, NULL, 0, NULL);
+	threadUpnp = CreateThread(NULL, 0, &threadUpnpCreate, (UPNPSTARTEDPROC*)upnpStartedCallback, 0, NULL);
 }
 
 void upnpStop()
