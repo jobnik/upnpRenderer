@@ -71,32 +71,29 @@ char* getBetween(const char *s, const char *from, const char *to)
 // Convert time string dd:hh:mm:ss (or d:h:m:s) to seconds
 int timeToSeconds(const char *sTime)
 {
-	//char *sCopy = _strdup(sTime);				// duplicate string for strtok
+	char tok[2] = {'0'};						// found token
+	int ti = 1;									// token index
 	char d = ':';								// time delimiter
-	char *token = NULL;
-	int t = 0;									// found token to int
+	int si = 0;									// string index
 	int s = 0;									// calculated seconds
-	int i = 1;									// loop index
+	int t = 1;									// calculated time
 
-	char *sCopy = (char*)calloc(strlen(sTime) + 1, sizeof(char));
-	strcpy(sCopy, sTime);
-	//sCopy[strlen(sCopy)] = '\0';
-	sCopy = strrev(sCopy);
-	//sCopy[strlen(sCopy)] = '\0';
-	token = strtok(sCopy, &d);          // reverse string to start from seconds and find first token
+	for (si = strlen(sTime) - 1; si >= 0; si--)	// start from seconds
+	{
+		if (sTime[si] != d) {
+    		tok[ti--] = sTime[si];				// save as reversed value
+			if (si) continue;
+		}
 
-	while (token) {
-		t = atoi(strrev(token));				// reverse back found token
-
-		s += t * i;								// calculate seconds
-
-		if (i == 3600) i *= 24;					// days
-		else i *= 60;							// minutes, hours
-
-		token = strtok(NULL, &d);				// next token
+    	s += atoi(tok) * t;						// calculate seconds
+    
+    	if (t == 3600) t *= 24;					// days
+    	else t *= 60;							// minutes, hours
+    
+		// reset token and its index
+		memset(tok, '0', sizeof(tok));
+        ti = 1;
 	}
-
-	free(sCopy);
 
 	return s;
 }
@@ -310,7 +307,7 @@ char *getTagValue(char *in, const wchar_t *find)
 	char *otag, *ctag;
 	char *d = "?";
 
-	wchar2char(find, &cbuf);
+	wchar2char(find, (char*)&cbuf);
 
 	otag = strtok(cbuf, d);
 	ctag = strtok(NULL, d);
