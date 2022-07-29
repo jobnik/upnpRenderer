@@ -483,7 +483,7 @@ void mpSetPosition(int pos)
 		if (_tcsstr(mp->NAME, TEXT("MPC-"))) {
 			pos /= (mp->IS_MS ? 1000 : 1);	// GET in MS, SET in Time string format HH:MM:SS
 		    SetTimeString(&buf, pos);
-		    char2wchar(buf, &wpos);
+			char2wchar(buf, (wchar_t*)&wpos);
 			_swprintf(wbuf, L"%s%s", mp->hp.SET_POSITION, wpos);
 		} else {
 			_swprintf(wbuf, L"%s%d", mp->hp.SET_POSITION, pos);
