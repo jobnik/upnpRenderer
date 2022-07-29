@@ -15,6 +15,7 @@
 extern void upnpStart();
 extern void upnpStop();
 extern BOOL isUpnpStarted;
+extern BOOL isAnyMediaPlayerExists;
 
 void GetMediaPlayersList(char *curMediaPlayer, char *mediaPlayers, HMENU hMenuControl)
 {
@@ -126,6 +127,7 @@ BOOL iniToControlMenu(HWND hWnd, HMENU hMenu, TCHAR *lastMediaPlayer, HMENU *hMe
 	HANDLE hFind = INVALID_HANDLE_VALUE, hFindMP = INVALID_HANDLE_VALUE;
 	TCHAR mp_name[50] = {0}, mp_path[1024] = {0};
 	int i = 0;
+	BOOL isMediaPlayerExists = FALSE;
 
 	GetCurrentDirectory(sizeof(szDir), szDir);
 
@@ -151,11 +153,17 @@ BOOL iniToControlMenu(HWND hWnd, HMENU hMenu, TCHAR *lastMediaPlayer, HMENU *hMe
 		if (mp_name[0] != '\0') {
 			hFindMP = FindFirstFile(mp_path, &ffdMP);	// check if media player exists
 
+			if (hFindMP != INVALID_HANDLE_VALUE) {
+				isMediaPlayerExists = isAnyMediaPlayerExists = TRUE;
+			} else {
+				isMediaPlayerExists = FALSE;
+			}
+
 			if (!*hMenuControl) *hMenuControl = CreatePopupMenu();
-			AppendMenu(*hMenuControl, MF_STRING | (hFindMP == INVALID_HANDLE_VALUE ? MF_DISABLED : 0), IDM_PLAYERHANDLE + i, mp_name);
+			AppendMenu(*hMenuControl, MF_STRING | (!isMediaPlayerExists ? MF_DISABLED : 0), IDM_PLAYERHANDLE + i, mp_name);
 
 			// set default player to control
-			if (!_tcscmp(mp_name, lastMediaPlayer)) {
+			if (!_tcscmp(mp_name, lastMediaPlayer) && isMediaPlayerExists) {
 				SendMessage(hWnd, WM_COMMAND, MAKELONG(IDM_PLAYERHANDLE + i, 0), 0);
 			}
 
@@ -170,7 +178,7 @@ BOOL iniToControlMenu(HWND hWnd, HMENU hMenu, TCHAR *lastMediaPlayer, HMENU *hMe
 		InsertMenu(hMenu, IDM_ABOUT, MF_POPUP | MF_BYCOMMAND, (UINT_PTR)*hMenuControl, TEXT("Control"));
 		return TRUE;
 	} else {
-		printft("Couldn't find any Media Player to Control");
+		wprintft(TEXT("Couldn't find any Media Player to Control"));
 	}
 
 	return FALSE;
