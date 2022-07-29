@@ -70,6 +70,7 @@ int WebServerPort = 3500;
 char friendlyName[100] = {0};
 TCHAR lastMediaPlayer[100] = {0};
 BOOL isUpnpStarted = FALSE;
+BOOL isAnyMediaPlayerExists = FALSE;
 
 extern struct MP *mp;
 
@@ -513,7 +514,9 @@ void upnpCreate(UPNPSTARTEDPROC *proc)
 
 void upnpStartedCallback()
 {
-	wprintft(TEXT("Controlling Media Player: %s\r\n"), lastMediaPlayer);
+	if (isAnyMediaPlayerExists) wprintft(TEXT("Controlling Media Player: %s\r\n"), lastMediaPlayer);
+	else wprintft(TEXT("Couldn't find any Media Player to Control\r\n"));
+
 	isUpnpStarted = TRUE;
 }
 
