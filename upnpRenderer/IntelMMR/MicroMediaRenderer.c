@@ -1547,7 +1547,7 @@ void UPnPAVTransport_Seek(void* upnptoken,unsigned int InstanceID,char* Unit,cha
 			if (MR->SeekEnabled == 0) {UPnPResponse_Error(upnptoken,AVT_ERROR_TRANSITION_NOT_AVAILABLE,AVT_ERRORSTR_TRANSITION_NOT_AVAILABLE);return;}
 
 			/* relative time */
-			//seekPosition = CalculateSeconds(Target);	// buggy, replaced by own function "timeToSeconds()" - (: JOBnik!: ) Arthur Aminov, Israel
+			//seekPosition = CalculateSeconds(Target);	// buggy, replaced by own function "timeToSeconds()" - (c) 2022 (: JOBnik!: ) Arthur Aminov, Israel
 			seekPosition = timeToSeconds(Target);
 			if (seekPosition < 0)
 			{
