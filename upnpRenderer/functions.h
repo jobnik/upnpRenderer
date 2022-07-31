@@ -1,6 +1,7 @@
-////////////////
-// by jobnik.net
-////////////////
+/*
+	(c) 2021 (: JOBnik! :) Arthur Aminov, Israel
+	https://www.jobnik.net
+*/
 
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
