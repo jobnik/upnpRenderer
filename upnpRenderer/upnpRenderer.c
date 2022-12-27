@@ -210,7 +210,7 @@ void MROnSeekRequestSink(enum MR_Enum_SeekModes seekMode, int seekPosition)
 
 		mpSetPosition(seekPosition);
 
-        SetTimeString(&buf, seekPosition);
+        SetTimeString(buf, seekPosition);
         printft("Seek position: %s\r\n", buf);
 	}
 }
