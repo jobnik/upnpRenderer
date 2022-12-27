@@ -19,9 +19,9 @@
 */
 
 #include "../upnpRenderer.h"
-#include <WinInet.h>
 #include "MediaPlayerControl.h"
 #include "../functions.h"
+#include "../IntelMMR/MicroMediaRenderer.h"
 
 #pragma comment(lib,"Wininet.lib")
 
@@ -224,54 +224,6 @@ HWND mpGetHandle()
 	return mp->hMP;
 }
 
-BOOL mpSendHttpRequest(TCHAR *server, int port, TCHAR *method, TCHAR *path, TCHAR *user, TCHAR *pass, char *outBuffer, int outBufferSize)
-{
-	HINTERNET hOpenHandle, hResourceHandle, hConnectHandle;
-	DWORD dwStatus;
-	DWORD dwStatusSize = sizeof(dwStatus);
-	DWORD dwSize = outBufferSize - 1;
-	int retries = 0;
-	int max_retries = 3;
-	BOOL retval = FALSE;
-
-	hOpenHandle = InternetOpen(TEXT("upnpRenderer v0.1 by jobnik.net"), INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
-	hConnectHandle = InternetConnect(hOpenHandle, server, port, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
-	hResourceHandle = HttpOpenRequest(hConnectHandle, method, path, NULL, NULL, NULL, INTERNET_FLAG_KEEP_CONNECTION, 0);
-
-	for (; retries < max_retries; retries++)
-	{
-		HttpSendRequest(hResourceHandle, NULL, 0, NULL, 0);
-		HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER | HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL);
-
-		switch (dwStatus)
-		{
-			DWORD userLen, passLen;
-
-			case HTTP_STATUS_PROXY_AUTH_REQ:	// Proxy Authentication Required
-				InternetSetOption(hResourceHandle, INTERNET_OPTION_PROXY_USERNAME, user, userLen + 1);
-				InternetSetOption(hResourceHandle, INTERNET_OPTION_PROXY_PASSWORD, pass, passLen + 1);
-			break;
-			case HTTP_STATUS_DENIED:			// Server Authentication Required.
-				InternetSetOption(hResourceHandle, INTERNET_OPTION_USERNAME, user, userLen + 1);
-				InternetSetOption(hResourceHandle, INTERNET_OPTION_PASSWORD, pass, passLen + 1);
-			break;
-			case HTTP_STATUS_OK:
-				if (outBufferSize) {
-					InternetReadFile(hResourceHandle, (LPVOID*)outBuffer, dwSize, &dwSize);
-				}
-				retries = max_retries;
-				retval = TRUE;
-			break;
-		}
-	}
-
-	InternetCloseHandle(hResourceHandle);
-	InternetCloseHandle(hConnectHandle);
-	InternetCloseHandle(hOpenHandle);
-
-	return retval;
-}
-
 // Control MP using SendMessage
 int mpSendCommands(WPARAM cmd, LPARAM val)
 {
@@ -322,12 +274,17 @@ int mpSendCommands(WPARAM cmd, LPARAM val)
 	return 0;
 }
 
+BOOL sendHttpRequestWrapper(TCHAR *path, char *outBuffer, int outBufferSize)
+{
+	return sendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), path, TEXT(upnpVersionString), mp->USER, mp->PASS, outBuffer, outBufferSize);
+}
+
 int getHttpIntVal(TCHAR *path, TCHAR *tag)
 {
 	char *cval, outBuf[WBUFFER_SIZE] = {0};
     int iout = 0;
 
-	mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), path, mp->USER, mp->PASS, &outBuf, WBUFFER_SIZE);
+	sendHttpRequestWrapper(path, outBuf, WBUFFER_SIZE);
 
 	cval = getTagValue(outBuf, tag);
 
@@ -343,7 +300,7 @@ char *getHttpStringVal(TCHAR *path, wchar_t *tag)
 {
 	char buf[WBUFFER_SIZE] = {0};
 
-	mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), path, mp->USER, mp->PASS, &buf, WBUFFER_SIZE);
+	sendHttpRequestWrapper(path, buf, WBUFFER_SIZE);
 
 	return getTagValue(buf, tag);
 }
@@ -371,7 +328,7 @@ void mpSetVolume(int vol)
 
 	if (mp->hp.SET_VOLUME[0] != '\0') {
 		_stprintf(tbuf, TEXT("%s%d"), mp->hp.SET_VOLUME, vol);
-		mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), tbuf, mp->USER, mp->PASS, "", 0);
+		sendHttpRequestWrapper(tbuf, "", 0);
 	} else {
 		mpSendCommands(mp->cm.SET_VOLUME | mp->cd.SET_VOLUME | mp->us.SET_VOLUME | mp->ap.SET_VOLUME, vol);
 	}
@@ -383,7 +340,7 @@ void mpSetVolume(int vol)
 void mpToggleMute()
 {
 	if (mp->hp.TOGGLE_MUTE[0] != '\0') {
-		mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), mp->hp.TOGGLE_MUTE, mp->USER, mp->PASS, NULL, 0);
+		sendHttpRequestWrapper(mp->hp.TOGGLE_MUTE, NULL, 0);
 	} else {
     	mpSendCommands(mp->cm.TOGGLE_MUTE | mp->cd.TOGGLE_MUTE | mp->us.TOGGLE_MUTE | mp->ap.TOGGLE_MUTE, 0);
 	}
@@ -393,7 +350,7 @@ void mpToggleMute()
 void mpPlay()
 {
 	if (mp->hp.PLAY[0] != '\0') {
-		mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), mp->hp.PLAY, mp->USER, mp->PASS, NULL, 0);
+		sendHttpRequestWrapper(mp->hp.PLAY, NULL, 0);
 	} else {
 	    mpSendCommands(mp->cm.PLAY | mp->cd.PLAY | mp->us.PLAY | mp->ap.PLAY, 0);
 	}
@@ -403,7 +360,7 @@ void mpPlay()
 void mpPause()
 {
 	if (mp->hp.PAUSE[0] != '\0') {
-		mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), mp->hp.PAUSE, mp->USER, mp->PASS, NULL, 0);
+		sendHttpRequestWrapper(mp->hp.PAUSE, NULL, 0);
 	} else {
     	mpSendCommands(mp->cm.PAUSE | mp->cd.PAUSE | mp->us.PAUSE | mp->ap.PAUSE, 0);
 	}
@@ -413,7 +370,7 @@ void mpPause()
 void mpStop()
 {
 	if (mp->hp.STOP[0] != '\0') {
-		mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), mp->hp.STOP, mp->USER, mp->PASS, NULL, 0);
+		sendHttpRequestWrapper(mp->hp.STOP, NULL, 0);
 	} else {
 	    mpSendCommands(mp->cm.STOP | mp->cd.STOP | mp->us.STOP | mp->ap.STOP, 0);
 	}
@@ -482,14 +439,14 @@ void mpSetPosition(int pos)
 	if (mp->hp.SET_POSITION[0] != '\0') {
 		if (_tcsstr(mp->NAME, TEXT("MPC-"))) {
 			pos /= (mp->IS_MS ? 1000 : 1);	// GET in MS, SET in Time string format HH:MM:SS
-		    SetTimeString(&buf, pos);
-			char2wchar(buf, (wchar_t*)&wpos);
+		    SetTimeString(buf, pos);
+			char2wchar(buf, wpos);
 			_swprintf(wbuf, L"%s%s", mp->hp.SET_POSITION, wpos);
 		} else {
 			_swprintf(wbuf, L"%s%d", mp->hp.SET_POSITION, pos);
 		}
 
-		mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), wbuf, mp->USER, mp->PASS, "", 0);
+		sendHttpRequestWrapper(wbuf, "", 0);
 	} else {
 		mpSendCommands(mp->cm.SET_POSITION | mp->cd.SET_POSITION | mp->us.SET_POSITION | mp->ap.SET_POSITION, mp->cd.SET_POSITION ? (LPARAM)_itow(pos, wbuf, 10) : pos);
 	}
@@ -518,7 +475,7 @@ int mpGetDuration()
 void mpNext()
 {
 	if (mp->hp.NEXT[0] != '\0') {
-		mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), mp->hp.NEXT, mp->USER, mp->PASS, NULL, 0);
+		sendHttpRequestWrapper(mp->hp.NEXT, NULL, 0);
 	} else {
 	    mpSendCommands(mp->cm.NEXT | mp->cd.NEXT | mp->us.NEXT | mp->ap.NEXT, 0);
 	}
@@ -528,7 +485,7 @@ void mpNext()
 void mpPrevious()
 {
 	if (mp->hp.PREVIOUS[0] != '\0') {
-		mpSendHttpRequest(mp->HOST, mp->PORT, TEXT("GET"), mp->hp.PREVIOUS, mp->USER, mp->PASS, NULL, 0);
+		sendHttpRequestWrapper(mp->hp.PREVIOUS, NULL, 0);
 	} else {
     	mpSendCommands(mp->cm.PREVIOUS | mp->cd.PREVIOUS | mp->us.PREVIOUS | mp->ap.PREVIOUS, 0);
 	}
