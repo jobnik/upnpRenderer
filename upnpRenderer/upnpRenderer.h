@@ -15,15 +15,15 @@
 #define upnpVersionString "upnpRenderer v0.1 by jobnik.net"
 #define upnpAbout "upnpRenderer v0.1\r\n\r\n(c) 2021 (: JOBnik! :) Arthur Aminov, Israel\r\nhttps://www.jobnik.net\r\n\r\nBased on Intel's UPnP Media Renderer"
 
-#define BUFFER_SIZE     1024
-#define WBUFFER_SIZE    BUFFER_SIZE * 10
+#define BUFFER_SIZE			1024
+#define WBUFFER_SIZE		BUFFER_SIZE * 10
 
-#define ID_DIALOG_MAIN  1000
-#define ID_PRINT_TEXT	1001
-#define IDI_ICON		1010
+#define ID_DIALOG_MAIN		1000
+#define ID_PRINT_TEXT		1001
+#define IDI_ICON			1010
 
-#define ID_TAB			110
-#define IDC_STATIC	    -1
+#define ID_TAB				110
+#define IDC_STATIC			-1
 
 #define IDR_TRAYMENU        10000
 #define IDR_TRAYMENU_TT     10001
