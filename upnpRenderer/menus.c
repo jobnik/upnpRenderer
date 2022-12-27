@@ -29,7 +29,7 @@ void GetMediaPlayersList(char *curMediaPlayer, char *mediaPlayers, HMENU hMenuCo
 	mii.fMask = MIIM_STATE;
 
 	for (; i < mc; i++) {
-		GetMenuStringA(hMenuControl, i, (char*)&menuString, sizeof(menuString), MF_BYPOSITION);
+		GetMenuStringA(hMenuControl, i, menuString, sizeof(menuString), MF_BYPOSITION);
 		strcat(mediaPlayers, menuString);
 		if (i < mc - 1) strcat(mediaPlayers, ",");
 
@@ -224,7 +224,7 @@ LRESULT wmCommandMenu(HWND h, UINT m, WPARAM w, LPARAM l, char *friendlyName, HM
 
             		CheckMenuRadioItem(hMenuControl, 0, GetMenuItemCount(hMenuControl) - 1, menuPos, MF_BYPOSITION);
             
-            		GetMenuString(hMenuControl, wmId, (TCHAR*)&menuString, sizeof(menuString), MF_BYCOMMAND);
+            		GetMenuString(hMenuControl, wmId, menuString, sizeof(menuString), MF_BYCOMMAND);
             
             		mpFree();
             		mpCreate();
