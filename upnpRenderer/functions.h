@@ -6,12 +6,20 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+// Get Windows version
 BOOL RtlGetVersion(OSVERSIONINFOEX *os);
 
+// Send HTTP Request and get a Response
+BOOL sendHttpRequest(TCHAR *server, int port, TCHAR *method, TCHAR *path, TCHAR *agent, TCHAR *user, TCHAR *pass, char *outBuffer, int outBufferSize);
+
+// https://stackoverflow.com/questions/24696113/how-to-find-text-between-two-strings-in-c
 char* getBetween(const char *s, const char *from, const char *to);
 
 // Convert time string dd:hh:mm:ss (or d:h:m:s) to seconds
 int timeToSeconds(const char *sTime);
+
+// Convert time string hh:mm:ss (or h:m:s) to seconds
+int timeToSecondsSscanf(const char *sTime);
 
 // Convert char to wchar_t
 void char2wchar(const char *s, wchar_t *sw);
