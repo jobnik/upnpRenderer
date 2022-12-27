@@ -2280,6 +2280,8 @@ void UPnPInit(struct UPnPDataObject *state, void *chain, const int NotifyCycleSe
 		NULL,
 		state);
 		
+		if (!state->NOTIFY_RECEIVE_socks[i]) continue;	// when ip removed causes an error if continued
+
 		ILibAsyncUDPSocket_JoinMulticastGroupV4(state->NOTIFY_RECEIVE_socks[i], (struct sockaddr_in*)&(state->MulticastAddrV4), (struct sockaddr*)&(state->AddressListV4[i]));
 		ILibAsyncUDPSocket_SetLocalInterface(state->NOTIFY_RECEIVE_socks[i], (struct sockaddr*)&(state->AddressListV4[i]));
 		ILibAsyncUDPSocket_SetMulticastLoopback(state->NOTIFY_RECEIVE_socks[i], 1);
@@ -6836,6 +6838,8 @@ void UPnPMasterPreSelect(void* object, void *socketset, void *writeset, void *er
 			NULL,
 			UPnPObject);
 			
+			if (!UPnPObject->NOTIFY_RECEIVE_socks[i]) continue;	// when ip removed causes an error if continued
+
 			ILibAsyncUDPSocket_JoinMulticastGroupV4(UPnPObject->NOTIFY_RECEIVE_socks[i], (struct sockaddr_in*)&(UPnPObject->MulticastAddrV4), (struct sockaddr*)&(UPnPObject->AddressListV4[i]));
 			ILibAsyncUDPSocket_SetLocalInterface(UPnPObject->NOTIFY_RECEIVE_socks[i], (struct sockaddr*)&(UPnPObject->AddressListV4[i]));
 			ILibAsyncUDPSocket_SetMulticastLoopback(UPnPObject->NOTIFY_RECEIVE_socks[i], 1);
