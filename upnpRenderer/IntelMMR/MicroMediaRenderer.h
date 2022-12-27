@@ -335,5 +335,7 @@ extern void (*MROnGetMediaPlayersList) (char* currentMediaPlayer, char* mediaPla
 
 extern void (*MROnSetMediaPlayer) (const char* mediaPlayer);
 
+void SetTimeString(char* str, int intTime);
+
 #endif
 
