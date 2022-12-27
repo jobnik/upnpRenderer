@@ -1547,8 +1547,8 @@ void UPnPAVTransport_Seek(void* upnptoken,unsigned int InstanceID,char* Unit,cha
 			if (MR->SeekEnabled == 0) {UPnPResponse_Error(upnptoken,AVT_ERROR_TRANSITION_NOT_AVAILABLE,AVT_ERRORSTR_TRANSITION_NOT_AVAILABLE);return;}
 
 			/* relative time */
-			//seekPosition = CalculateSeconds(Target);	// buggy, replaced by own function "timeToSeconds()" - (c) 2022 (: JOBnik!: ) Arthur Aminov, Israel
-			seekPosition = timeToSeconds(Target);
+			//seekPosition = CalculateSeconds(Target);	// buggy, replaced by own function "timeToSecondsSscanf()" - (c) 2022 (: JOBnik!: ) Arthur Aminov, Israel
+			seekPosition = timeToSecondsSscanf(Target);
 			if (seekPosition < 0)
 			{
 				#define BAD_TIME_STRING "Illegal seek target: \"%s\" is not a valid ISO8601 hh:mms:ss formatted string."
