@@ -7,6 +7,7 @@
 
 #include "upnpRenderer.h"
 #include "functions.h"
+#include <WinInet.h>
 
 #ifndef ID_PRINT_TEXT
 #define ID_PRINT_TEXT   1001
@@ -39,6 +40,55 @@ BOOL RtlGetVersion(OSVERSIONINFOEX *os)
     FreeLibrary(hMod);
 
     return TRUE;
+}
+
+// Send HTTP Request and get a Response
+BOOL sendHttpRequest(TCHAR *server, int port, TCHAR *method, TCHAR *path, TCHAR *agent, TCHAR *user, TCHAR *pass, char *outBuffer, int outBufferSize)
+{
+	HINTERNET hOpenHandle, hResourceHandle, hConnectHandle;
+	DWORD dwStatus;
+	DWORD dwStatusSize = sizeof(dwStatus);
+	DWORD dwSize = outBufferSize - 1;
+	int retries = 0;
+	int max_retries = 3;
+	BOOL retval = FALSE;
+
+	hOpenHandle = InternetOpen(agent, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+	hConnectHandle = InternetConnect(hOpenHandle, server, port, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
+	hResourceHandle = HttpOpenRequest(hConnectHandle, method, path, NULL, NULL, NULL, INTERNET_FLAG_KEEP_CONNECTION, 0);
+
+	for (; retries < max_retries; retries++)
+	{
+		HttpSendRequest(hResourceHandle, NULL, 0, NULL, 0);
+		HttpQueryInfo(hResourceHandle, HTTP_QUERY_FLAG_NUMBER | HTTP_QUERY_STATUS_CODE, &dwStatus, &dwStatusSize, NULL);
+
+		switch (dwStatus)
+		{
+			DWORD userLen, passLen;
+
+			case HTTP_STATUS_PROXY_AUTH_REQ:	// Proxy Authentication Required
+				InternetSetOption(hResourceHandle, INTERNET_OPTION_PROXY_USERNAME, user, userLen + 1);
+				InternetSetOption(hResourceHandle, INTERNET_OPTION_PROXY_PASSWORD, pass, passLen + 1);
+			break;
+			case HTTP_STATUS_DENIED:			// Server Authentication Required.
+				InternetSetOption(hResourceHandle, INTERNET_OPTION_USERNAME, user, userLen + 1);
+				InternetSetOption(hResourceHandle, INTERNET_OPTION_PASSWORD, pass, passLen + 1);
+			break;
+			case HTTP_STATUS_OK:
+				if (outBufferSize) {
+					InternetReadFile(hResourceHandle, (LPVOID*)outBuffer, dwSize, &dwSize);
+				}
+				retries = max_retries;
+				retval = TRUE;
+			break;
+		}
+	}
+
+	InternetCloseHandle(hResourceHandle);
+	InternetCloseHandle(hConnectHandle);
+	InternetCloseHandle(hOpenHandle);
+
+	return retval;
 }
 
 // https://stackoverflow.com/questions/24696113/how-to-find-text-between-two-strings-in-c
@@ -93,6 +143,19 @@ int timeToSeconds(const char *sTime)
 		// reset token and its index
 		memset(tok, '0', sizeof(tok));
         ti = 1;
+	}
+
+	return s;
+}
+
+// Convert time string hh:mm:ss (or h:m:s) to seconds
+int timeToSecondsSscanf(const char *sTime)
+{
+	int hh = 0, mm = 0, ss = 0;
+	int s = 0;
+
+	if (sscanf(sTime, "%d:%d:%d", &hh, &mm, &ss)) {
+		s = ss + (mm * 60) + (hh * 3600);
 	}
 
 	return s;
@@ -307,7 +370,7 @@ char *getTagValue(char *in, const wchar_t *find)
 	char *otag, *ctag;
 	char *d = "?";
 
-	wchar2char(find, (char*)&cbuf);
+	wchar2char(find, cbuf);
 
 	otag = strtok(cbuf, d);
 	ctag = strtok(NULL, d);
